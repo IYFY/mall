@@ -1,9 +1,9 @@
 <template>
-  <div class="goods-item">
-    <img :src="goodsItem.show.img">
+  <div class="goods-item" @click="itemClick">
+    <img :src="showImage" @load="imgLoad">
     <div class="goods-info">
       <p>{{goodsItem.title}}</p>
-      <span class="price">{{goodsItem.price + '￥'}}</span>
+      <span class="price">{{'￥' + goodsItem.price}}</span>
       <span class="collect">{{goodsItem.cfav}}</span>
     </div>
   </div>
@@ -19,7 +19,28 @@ export default {
         return {}
       }
     }
-  }
+  },
+  computed: {
+    showImage() {
+      return this.goodsItem.image || this.goodsItem.show.img
+    }
+  },
+  methods: {
+      // 监听图片加载完
+      imgLoad()  {
+        // 在main.js中new vue实例，赋值给原型
+        // 通过事件总线，发射事件，在其它（home）组件中直接监听事件
+        this.$bus.$emit('itemImgLoad');
+      },
+      itemClick() {
+        this.$router.push({
+          path: '/detail',
+          query: {
+            iid: this.goodsItem.iid
+          }
+        });
+      }
+    }
 }
 </script>
 

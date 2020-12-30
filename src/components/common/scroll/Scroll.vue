@@ -28,10 +28,22 @@ export default {
   },
   methods: {
     scrollTo(x, y, time = 300) {
-      this.scroll.scrollTo(x, y, time);
+      // this.scroll.scrollTo(x, y, time);
+      // 有时候（图片请求完成，而scoll还没创建）调用该函数时，scroll属性还没有创建，
+      // 或者属性没有方法，一调用就会报错，严谨写法：
+      this.scroll && this.scroll.scrollTo && this.scroll.scrollTo(x, y, time);
     },
+    // 下拉加载更多函数
     finishPullUp() {
-      this.scroll.finishPullUp();
+      // this.scroll.finishPullUp();
+      this.scroll && this.scroll.finishPullUp && this.scroll.finishPullUp();
+    },
+    refresh() {
+      // this.scroll.refresh();
+      this.scroll && this.scroll.refresh && this.scroll.refresh();
+    },
+    getScrollY() {
+      return this.scroll ? this.scroll.y : 0;
     }
   },
   mounted() {
@@ -42,14 +54,18 @@ export default {
       // probeType与pullUpLoad 都会触发BScroll的scroll事件
       observeDOM: true
     });
-
-    this.scroll.on("scroll", position => {
-      this.$emit("scroll", position);
-    });
-
-    this.scroll.on("pullingUp", () => {
-      this.$emit("pullingUp");
-    });
+    // 监听滚动位置
+    if (this.probeType === 1 || this.probeType === 2 || this.probeType === 3) {
+      this.scroll.on("scroll", position => {
+        this.$emit("scroll", position);
+      });
+    }
+    // 监听下拉加载更多
+    if (this.pullUpLoad) {
+      this.scroll.on("pullingUp", () => {
+        this.$emit("pullingUp");
+      });
+    }
   }
 };
 </script>
