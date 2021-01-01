@@ -14,11 +14,15 @@
 
     <!-- 组件作为标签时，监听原生事件要加.native修饰符 -->
     <back-top @click.native="backClick" v-show="isshow"></back-top>
+
+    <!-- <toast :message="message" :show="show"></toast> -->
   </div>
 </template>
 
 <script>
 import Scroll from "components/common/scroll/Scroll";
+// import Toast from "components/common/toast/Toast";
+
 import GoodsList from "components/content/goods/GoodsList";
 
 import DetailNavBar from "./childComponents/DetailNavBar";
@@ -44,6 +48,7 @@ export default {
   name: "Detail",
   components: {
     Scroll,
+    // Toast,
     GoodsList,
     DetailNavBar,
     DetailSwiper,
@@ -68,7 +73,10 @@ export default {
       recommends: [],
       itemImgListener: null,
       themeTopYs: [],
-      currentIndex: 0
+      currentIndex: 0,
+
+      // message: '',
+      // show: false
     };
   },
   created() {
@@ -136,7 +144,6 @@ export default {
   methods: {
     // 加入购物车
     addCart() {
-      console.log("dddddd");
       // 购物车需要展示的信息
       const product = {};
       product.image = this.topImages[0];
@@ -145,7 +152,19 @@ export default {
       product.price = this.goods.newPrice;
       product.iid = this.iid;
 
-      this.$store.dispatch('addCart', product)
+      //toast弹窗
+      this.$store.dispatch('addCart', product).then(res => {
+        // this.message = res;
+        // this.show = true
+        // setTimeout(() => {
+        //   this.show = false;
+        //   this.message = '';
+        // }, 1500)
+
+        // toast插件的使用
+        this.$toast.show(res, 1500)
+
+      })
     },
     imgLoad() {
       this.$refs.scroll.refresh();

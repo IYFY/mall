@@ -5,6 +5,7 @@ import Vuex from 'vuex'
 // 但一般state不需要抽取出去
 import mutations from './mutations'
 import actions from './actions'
+import getters from './getters'
 
 Vue.use(Vuex)
 
@@ -15,7 +16,8 @@ const state = {
 const store = new Vuex.Store({
   state,
   mutations,
-  actions
+  actions,
+  getters
 })
 
 export default store
